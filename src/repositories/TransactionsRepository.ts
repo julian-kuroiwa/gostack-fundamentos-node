@@ -23,7 +23,24 @@ class TransactionsRepository {
     return this.transactions;
   }
 
-  // public getBalance(): Balance {}
+  public getBalance(): Balance {
+    const reducedValue = (type: string): number => {
+      return this.transactions
+        .filter(transaction => transaction.type === type)
+        .reduce((acc, actual) => acc + actual.value, 0);
+    };
+
+    const income = reducedValue('income');
+    const outcome = reducedValue('outcome');
+
+    const balance = {
+      income,
+      outcome,
+      total: income - outcome,
+    };
+
+    return balance;
+  }
 
   public create({ title, value, type }: TransactionCreateParams): Transaction {
     const transaction = new Transaction({
